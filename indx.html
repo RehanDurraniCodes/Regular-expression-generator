@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Regex Generator for Σ = {a, b}</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f9f9f9;
+    }
+    h2 {
+      color: #222;
+    }
+    textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+    code {
+      background-color: #eee;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-family: Consolas, monospace;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Regex Generator for Σ = {a, b}</h2>
+  <p>Type a language description : <em>"begins with a"</em>, <em>"contains ab"</em>, or <em>"begin with letter and end with same"</em></p>
+
+  <textarea id="description" rows="4" placeholder="Enter your language description here..."></textarea>
+  <br />
+  <button onclick="generateRegex()">Generate Regex</button>
+
+  <p id="result">Regex: <code>...</code></p>
+
+  <script>
+    function generateRegex() {
+      const desc = document.getElementById('description').value.toLowerCase().trim();
+      let regex = "Pattern not recognized.";
+
+      const beginsWithA = desc.includes("begin with a");
+      const beginsWithLetter = desc.includes("begin with letter") || desc.includes("begin with a or b");
+
+      const endsWithA = desc.includes("end with a") || desc.includes("ends with a") || desc.includes("end in a") || desc.includes("ends in a");
+      const endsWithB = desc.includes("end with b") || desc.includes("ends with b") || desc.includes("end in b") || desc.includes("ends in b");
+
+      const endsWithSame = desc.includes("end with same");
+
+      const containsAB = desc.includes("contains") && desc.includes("ab");
+      const onlyA = desc.includes("only a");
+      const onlyB = desc.includes("only b");
+      const noConsecutiveB = desc.includes("no consecutive b");
+      const evenA = desc.includes("even number of a");
+      const exactlyTwoA = desc.includes("exactly two a");
+
+      if (beginsWithA && endsWithA) {
+        regex = "a(a|b)*a";
+      } else if (beginsWithA && endsWithB) {
+        regex = "a(a|b)*b";
+      } else if (beginsWithA) {
+        regex = "a(a|b)*";
+      } else if (endsWithSame && beginsWithLetter) {
+        regex = "(a(a|b)*a)|(b(a|b)*b)";
+      } else if (endsWithA) {
+        regex = "(a|b)*a";
+      } else if (endsWithB) {
+        regex = "(a|b)*b";
+      } else if (containsAB) {
+        regex = "(a|b)*ab(a|b)*";
+      } else if (onlyA) {
+        regex = "a*";
+      } else if (onlyB) {
+        regex = "b*";
+      } else if (noConsecutiveB) {
+        regex = "(a|ba)*";
+      } else if (evenA) {
+        regex = "((b*ab*a)*b*)*";
+      } else if (exactlyTwoA) {
+        regex = "b*ab*ab*";
+      }
+
+      document.getElementById('result').innerHTML = `Regex: <code>${regex}</code>`;
+    }
+  </script>
+
+</body>
+</html>
